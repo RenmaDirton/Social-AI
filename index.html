@@ -48,13 +48,35 @@ Generate Post
 <div id="result"></div>
 
 <script>
-function generatePost(){
+async function generatePost() {
     const business =
         document.getElementById("business").value;
 
     document.getElementById("result").innerHTML =
-        "Post for: " + business +
-        "<br><br>AI connection coming soon...";
+        "Generating...";
+
+    try {
+        const response = await fetch(
+            "https://social-ai.haisammosa1111pc.workers.dev",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    prompt: business
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        document.getElementById("result").innerHTML =
+            data.result;
+    } catch (error) {
+        document.getElementById("result").innerHTML =
+            "Error: " + error.message;
+    }
 }
 </script>
 
