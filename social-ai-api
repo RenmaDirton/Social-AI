@@ -1,0 +1,53 @@
+export default {
+  async fetch(request) {
+
+    if (request.method === "POST") {
+
+      const body =
+        await request.json();
+
+     const aiResponse =
+  await fetch(
+    "https://integrate.api.nvidia.com/v1/chat/completions",
+    {
+      method: "POST",
+      headers: {
+        "Authorization":
+          `Bearer ${env.NVIDIA_API_KEY}`,
+        "Content-Type":
+          "application/json"
+      },
+      body: JSON.stringify({
+        model:
+          "openai/gpt-oss-20b",
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are a social media marketing expert."
+          },
+          {
+            role: "user",
+            content:
+              `Write a social media post for: ${body.prompt}`
+          }
+        ]
+      })
+    }
+  );
+
+const data =
+  await aiResponse.json();
+
+return Response.json({
+  result:
+    data.choices[0]
+      .message.content
+});
+    }
+
+    return new Response(
+      "API Running"
+    );
+  }
+};
